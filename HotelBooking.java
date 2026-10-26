@@ -160,7 +160,7 @@ public class HotelBooking {
         System.out.print("Enter your age: ");
         age = input.nextInt();
        while(age < 18){
-        System.out.print("You must be 18 and older to book!");
+        System.out.println("You must be 18 and older to book!");
             age = input.nextInt();  
         }
         
@@ -172,7 +172,7 @@ public class HotelBooking {
            System.out.println("How many nights are you staying here? ");
            nights = input.nextInt();
         }
-        while (nights < 1 || nights > 31); 
+        while (nights < 1 || nights > 30); 
         input.nextLine();
        
 
@@ -184,10 +184,10 @@ public class HotelBooking {
         if(email.contains("@")){
         username = email.substring(0,email.indexOf("@"));
         String domain = email.substring(email.indexOf("@") + 1);
-        System.out.print("Confirmation would be sent to: " + username + "@" + domain);
+        System.out.println("Confirmation would be sent to: " + username + "at" + domain);
         }
-        if(email.isEmpty() || !email.contains("@")){
-        System.out.print("No confirmation email would be sent");
+       else{
+        System.out.println("No confirmation email would be sent");
         }
         
 double basePrice;
@@ -196,7 +196,7 @@ double basePrice;
             case "single" -> basePrice = 40.00;
             case "double" -> basePrice = 65.00;
             case "family suite" -> basePrice = 95.00;
-            case "sea bed" -> basePrice = 120.00;
+            case "sea view" -> basePrice = 120.00;
             default -> basePrice = 0;
         }
 
@@ -204,16 +204,16 @@ double basePrice;
 
 
        if(nights >= 14){
-        System.out.print("You have a discount of 20%");
-        basePrice *= 0.80;
+        System.out.println("You have a discount of 20%");
+        finalPrice *= 0.80;
        }
        else if (nights >= 7 && nights <= 13) {
            System.out.print("You have a discount of 15%");
-           basePrice *= 0.85;
+           finalPrice *= 0.85;
 
        } else if (nights >= 3 && nights <= 6){
         System.out.print("You have a discount of 5%");
-        basePrice *= 0.95;
+        finalPrice *= 0.95;
         
        } else if (nights >=1 && nights <=2){
         System.out.print("You have no discount");
@@ -223,7 +223,7 @@ double basePrice;
        }
 
 
-       input.close();
+       
 
  
 if(rewardMember){
@@ -232,12 +232,13 @@ if(rewardMember){
         basePrice *= 0.85;
     } else{
         System.out.print("You have extra 8% off");
-        basePrice *= 0.94;
+        basePrice *= 0.92;
     }
 }
 else{
     if(age >= 60){
         System.out.print("You have extra 5% off");
+        basePrice *= 0.95;
     }
     else{
         System.out.print("No extra discount");
@@ -245,27 +246,14 @@ else{
     }
 
 
-// - Work out (use the MATH class and the TERNARY operator):
-//  *      - total for the whole stay, and how much was saved on the whole stay
-//  *      - reward points: 1 point for every 4.00 of the total, rounded  -> Math.round()
-//  *      - housekeeping visits: one every 3 nights, rounded UP          -> Math.ceil()
-//  *            (careful: nights / 3 with two ints throws away the decimal. Use nights / 3.0)
-//  *      - guestType  = "Rewards Member" if they are a member, otherwise "Standard Guest"  -> ternary
-//  *      - breakfast  = "Included" if they stay 7+ nights, otherwise "Not included"         -> ternary
-//  *
-//  * STEP 7 - Use RANDOM to make:
+
 
 finalPrice = basePrice * nights;
 
 double total = finalPrice * nights;
 double saved = basePrice;
 
-
-
-
-//we have two prices. base price and final price. 
-// base price is the original price without discounts
-//final price is the price
+input.close();
         }
     }
 

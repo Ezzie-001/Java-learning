@@ -26,9 +26,12 @@ public class randomClass {
 
        //Boolean 
        isHeads = ram.nextBoolean();
-       System.out.println("Heads");
+       
 
        if(isHeads){
+        System.out.println("Heads");
+       }
+        else{
         System.out.println("Tails");
        }
     }

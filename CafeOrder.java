@@ -84,10 +84,10 @@ public class CafeOrder {
         String name;
         String meal;
         int age;
+        double price;
         boolean isLoyalClient;
         int plate; 
-        double price;
-        double basePrice;
+        double basePrice=0;
         int orderNumber = 45;
        
         //output the input
@@ -119,12 +119,12 @@ if(name.isEmpty()){
 
     //enhanced switch
 switch(meal.toLowerCase()){
-    case "jollof" -> System.out.println("5.00");
-    case "fried rice" -> System.out.println("5.50");
-    case "pasta" -> System.out.println("4.75");
-    case "burger" -> System.out.println("6.25");
-    case "shawarma" -> System.out.println("7.00");
-    default -> basePrice = 5.00;
+    case "jollof" -> basePrice = 5.00;
+    case "fried rice" -> basePrice = 5.50;
+    case "pasta" -> basePrice = 4.75;
+    case "burger" -> basePrice = 6.25;
+    case "shawarma" -> basePrice = 7.00;
+    default -> basePrice = 0.00;
 }
 
 price = basePrice;
@@ -139,7 +139,7 @@ price = basePrice;
         price *= 0.90;
         }
 
-    else if(plate >= 2 && plate < 6){
+    else if(plate >= 2 && plate < 5){
             System.out.println("You have received a discount of 5%");
             price *= 0.95;
         }
@@ -152,169 +152,60 @@ price = basePrice;
         }
     
 
+double price2 = price;
+
 
     //nested if
-    if(isLoyalClient){
+    if(isLoyalClient = true){
         if(age < 18){
             System.out.println("You have received 20% discount!!");
-                price *= 0.2;
+                price2 *= 0.2;
             }
             else{
             System.out.println("You have received 10% discount!!");
-                price *= 0.1;
+                price2 *= 0.1;
             }
         }
     else{
         if(age<18){
             System.out.println("You have received 5% discount!!");
-                price *= 0.05;
+                price2 *= 0.05;
         }
         else{
             System.out.println("You have received no discount!!");
-                price *= 1;
+                price2 *= 1;
         }
     }
 
+   double total = (price * plate) - (price2 * plate);
+   double totalPrice = basePrice * plate;
+
     if(meal.isEmpty()){
-        System.out.println(meal + " is not on the menu");
+        System.out.println("Enter a valid meal");
     }
     else{
         System.out.println();
-        System.out.println("=======RECEIPT=======");
-        System.out.printf("Order No    :    %5d\n", orderNumber);
-        System.out.printf("Customer    :    %-12s\n", name);
-        System.out.printf("Initial     :    %c\n", meal);
-        System.out.printf("No of plate :    %d\n", plate);
-        System.out.printf("Loyalty card:    %b\n", isLoyalClient);
-        System.out.printf("Plate price :    %.2f\n", plate);
-        System.out.printf("Amt saved   :    %5d\n", basePrice - price);
-        System.out.printf("Total       :    %5d\n", orderNumber);
+        System.out.println("=======RECEIPT============");
+        System.out.printf("Order No      :    %5d\n", orderNumber);
+        System.out.printf("Customer      :    %-12s|\n", name);
+        System.out.printf("Initial       :    %s\n", meal);
+        System.out.printf("No of plate   :    %6d\n", plate);
+        System.out.printf("Loyalty card  :    %6b\n", isLoyalClient);
+        System.out.printf("Plate price   :    %6.2f\n", basePrice);
+        System.out.printf("Original Price:  %8.2f\n",   totalPrice);
+        System.out.printf("Amt saved     :    %6.2f\n", (basePrice * plate) - total);
+        System.out.printf("Total         :    %6.2f\n", total);
+        System.out.println("===========================");
     }
 
     input.close();
 }
-    
 
     }
 
-    
 
-/*
- * ================== SOLUTION (tested: Tola sample run gives $44.88) ==================
- * Try fixing your own version first - only look here to check or when really stuck.
- * The import java.util.Scanner; line at the top of the file is also needed.
- *
- * public class CafeOrder {
- *     public static void main(String[] args) {
- *
- *         Scanner input = new Scanner(System.in);
- *
- *         // ---------- STEP 1: VARIABLES + SCANNER ----------
- *         String name;
- *         String meal;
- *         int age;
- *         boolean isLoyalClient;
- *         int plate;
- *         double basePrice;          // menu price - never changes after the switch
- *         double price;              // price after discounts
- *         int orderNumber = 7;
- *
- *         System.out.print("Enter your name: ");
- *         name = input.nextLine();
- *
- *         System.out.print("What would you like? ");
- *         meal = input.nextLine();   // nextLine because "Fried Rice" is two words
- *
- *         System.out.print("Enter your age: ");
- *         age = input.nextInt();
- *
- *         System.out.print("Do you have a loyalty card? (true/false): ");
- *         isLoyalClient = input.nextBoolean();
- *
- *         System.out.print("How many plates? ");
- *         plate = input.nextInt();
- *
- *         // ---------- STEP 2: IF / ELSE ----------
- *         if (name.isEmpty()) {
- *             name = "Customer";
- *             System.out.println("Name is required!");
- *         }
- *         else {
- *             System.out.println("Hi " + name + ", let's take your order.");
- *         }
- *
- *         // ---------- STEP 3: ENHANCED SWITCH ----------
- *         switch (meal.toLowerCase()) {
- *             case "jollof" -> basePrice = 5.00;
- *             case "fried rice" -> basePrice = 5.50;
- *             case "pasta" -> basePrice = 4.75;
- *             case "burger" -> basePrice = 6.25;
- *             case "shawarma" -> basePrice = 7.00;
- *             default -> basePrice = 0;
- *         }
- *
- *         price = basePrice;
- *
- *         // ---------- STEP 4: IF / ELSE IF / ELSE ----------
- *         if (plate >= 10) {
- *             System.out.println("Bulk discount: 15% off");
- *             price *= 0.85;
- *         }
- *         else if (plate >= 5) {
- *             System.out.println("Bulk discount: 10% off");
- *             price *= 0.90;
- *         }
- *         else if (plate >= 2) {
- *             System.out.println("Bulk discount: 5% off");
- *             price *= 0.95;
- *         }
- *         else {
- *             System.out.println("No bulk discount.");
- *         }
- *
- *         // ---------- STEP 5: NESTED IF ----------
- *         if (isLoyalClient) {
- *             if (age < 18) {
- *                 System.out.println("Loyalty card (under 18): extra 20% off");
- *                 price *= 0.80;
- *             }
- *             else {
- *                 System.out.println("Loyalty card: extra 10% off");
- *                 price *= 0.90;
- *             }
- *         }
- *         else {
- *             if (age < 18) {
- *                 System.out.println("Under 18: extra 5% off");
- *                 price *= 0.95;
- *             }
- *             else {
- *                 System.out.println("No extra discount.");
- *             }
- *         }
- *
- *         double total = price * plate;
- *         double saved = (basePrice - price) * plate;
- *
- *         // ---------- STEP 6: PRINTF RECEIPT ----------
- *         if (basePrice == 0) {
- *             System.out.println(meal + " is not on the menu.");
- *         }
- *         else {
- *             System.out.println();
- *             System.out.println("======== CAFE RECEIPT ========");
- *             System.out.printf("Order No.  : %05d\n", orderNumber);
- *             System.out.printf("Customer   : %-12s|\n", name);
- *             System.out.printf("Meal       : %s (%c)\n", meal, meal.charAt(0));
- *             System.out.printf("Plates     : %d\n", plate);
- *             System.out.printf("Loyalty    : %b\n", isLoyalClient);
- *             System.out.printf("Per plate  : $%.2f\n", basePrice);
- *             System.out.printf("Saved      : $%(.2f\n", -saved);
- *             System.out.printf("TOTAL      : $%,.2f\n", total);
- *             System.out.println("==============================");
- *         }
- *
- *         input.close();
- *     }
- * }
- */
+//so we have initial price
+//we have discounted price from loyalty(price * discount)
+// then we have a new price from the discount
+//then we apply a new discount on an already discounted price
+//Then that would be out final price

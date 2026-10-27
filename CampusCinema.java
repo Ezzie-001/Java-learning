@@ -76,7 +76,7 @@ public class CampusCinema {
             } else {
                 seats[row][column] = true;
                 break;
-            }2
+            }
         }
 
         String emailDisplay = "Not provided";
@@ -117,6 +117,37 @@ public class CampusCinema {
                 System.out.print(marker + " ");
             }
             System.out.println();
+        }
+    }
+
+    private static class Ticket {
+        private final int bookingNumber;
+        private final String customerName;
+        @SuppressWarnings("unused")
+        private final String email;
+        private final String ticketType;
+        private final int age;
+        private final int row;
+        private final int column;
+        private final double basePrice;
+        private final double discountRate;
+
+        private Ticket(int bookingNumber, String customerName, String email,
+                       String ticketType, int age, int row, int column,
+                       double basePrice, double discountRate) {
+            this.bookingNumber = bookingNumber;
+            this.customerName = customerName;
+            this.email = email;
+            this.ticketType = ticketType;
+            this.age = age;
+            this.row = row;
+            this.column = column;
+            this.basePrice = basePrice;
+            this.discountRate = discountRate;
+        }
+
+        private double calculatePrice() {
+            return basePrice * (1.0 - discountRate);
         }
     }
 }

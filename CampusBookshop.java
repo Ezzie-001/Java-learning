@@ -20,12 +20,12 @@ public class CampusBookshop {
 
     static final String[] DAYS = {"Monday", "Tuesday", "Wednesday"};
 
-    // An array of objects: each position holds one Product object.
-    static final Product[] inventory = {
-        new Product("Things Fall Apart", 12.50, 8),
-        new Product("Purple Hibiscus", 14.00, 6),
-        new Product("The Alchemist", 10.00), // Uses the overloaded constructor (default stock: 10)
-        new Product("Born a Crime", 16.50, 5)
+    // An array of objects: each position holds one BookshopProduct object.
+    static final BookshopProduct[] inventory = {
+        new BookshopProduct("Things Fall Apart", 12.50, 8),
+        new BookshopProduct("Purple Hibiscus", 14.00, 6),
+        new BookshopProduct("The Alchemist", 10.00), // Uses the overloaded constructor (default stock: 10)
+        new BookshopProduct("Born a Crime", 16.50, 5)
     };
 
     // sales[book number][day number] stores copies sold.
@@ -104,7 +104,7 @@ public class CampusBookshop {
         showInventory();
         int productNumber = readInt("Choose a book number: ", 1, inventory.length);
         int productIndex = productNumber - 1;
-        Product product = inventory[productIndex];
+        BookshopProduct product = inventory[productIndex];
 
         if (product.getStock() == 0) {
             System.out.println("Sorry, that book is out of stock.");
@@ -233,16 +233,16 @@ public class CampusBookshop {
     }
 }
 
-class Product {
+class BookshopProduct {
     private final String name;
     private final double price;
     private int stock;
 
-    Product(String name, double price) {
+    BookshopProduct(String name, double price) {
         this(name, price, 10); // The 2-argument constructor supplies a default stock count.
     }
 
-    Product(String name, double price, int stock) {
+    BookshopProduct(String name, double price, int stock) {
         this.name = name;
         this.price = price;
         this.stock = stock;
@@ -272,14 +272,14 @@ class Product {
 class Order {
     private final int orderNumber;
     private final String customerName;
-    private final Product product;
+    private final BookshopProduct product;
     private final int quantity;
     private final boolean student;
     private final int dayIndex;
     private final double subtotal;
     private final double total;
 
-    Order(int orderNumber, String customerName, Product product,
+    Order(int orderNumber, String customerName, BookshopProduct product,
             int quantity, boolean student, int dayIndex) {
         this.orderNumber = orderNumber;
         this.customerName = customerName;

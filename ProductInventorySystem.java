@@ -1,3 +1,8 @@
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Scanner;
 
 public class ProductInventorySystem {
@@ -7,6 +12,7 @@ public class ProductInventorySystem {
     static double totalRevenue = 0;
 
     public static void main(String[] args) {
+        loadInventory();
         boolean isRunning = true;
 
         while (isRunning) {
@@ -23,6 +29,7 @@ public class ProductInventorySystem {
                 case 5 -> makeSale();
                 case 6 -> showReport();
                 case 7 -> {
+                    saveInventory();
                     isRunning = false;
                     System.out.println("Goodbye.");
                 }
@@ -118,6 +125,7 @@ public class ProductInventorySystem {
         }
 
         productCount++;
+        saveInventory();
         System.out.println("Product registered successfully.");
     }
 
@@ -178,6 +186,7 @@ public class ProductInventorySystem {
         }
 
         product.updateExtraDetails(input);
+        saveInventory();
         System.out.println("Product updated successfully.");
     }
 
@@ -210,6 +219,7 @@ public class ProductInventorySystem {
         double saleTotal = product.price * quantity;
         product.quantityInStock -= quantity;
         totalRevenue += saleTotal;
+        saveInventory();
         System.out.printf("Sale successful. Total: $%.2f%n", saleTotal);
     }
 
@@ -253,5 +263,65 @@ public class ProductInventorySystem {
             }
         }
         return -1;
+    }
+
+    // Load saved products and sales revenue when the program starts.
+    static void loadInventory() {
+        try (BufferedReader reader = new BufferedReader(new FileReader("inventory.txt"))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split("\\t", -1);
+                if (parts[0].equals("REPORT") && parts.length == 2) {
+                    totalRevenue = Double.parseDouble(parts[1]);
+                } else if (parts[0].equals("PRODUCT") && parts.length == 7
+                        && productCount < products.length) {
+                    String id = parts[1];
+                    String name = parts[2];
+                    double price = Double.parseDouble(parts[3]);
+                    int quantity = Integer.parseInt(parts[4]);
+                    if (parts[5].equals("ELECTRONIC")) {
+                        products[productCount++] = new ElectronicProduct(id, name, price,
+                                quantity, Integer.parseInt(parts[6]));
+                    } else if (parts[5].equals("FOOD")) {
+                        products[productCount++] = new FoodProduct(id, name, price,
+                                quantity, parts[6]);
+                    } else if (parts[5].equals("STANDARD")) {
+                        products[productCount++] = new Product(id, name, price, quantity);
+                    }
+                }
+            }
+            System.out.println("Inventory loaded from inventory.txt.");
+        } catch (java.io.FileNotFoundException e) {
+            System.out.println("No saved inventory found. Starting with an empty inventory.");
+        } catch (IOException | NumberFormatException e) {
+            System.out.println("Could not load inventory: " + e.getMessage());
+        }
+    }
+
+    // Save products and revenue so they are available the next time the program runs.
+    static void saveInventory() {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("inventory.txt"))) {
+            writer.write("REPORT\t" + totalRevenue);
+            writer.newLine();
+            for (int i = 0; i < productCount; i++) {
+                Product product = products[i];
+                String type = "STANDARD";
+                String extra = "";
+                if (product instanceof ElectronicProduct) {
+                    type = "ELECTRONIC";
+                    extra = String.valueOf(((ElectronicProduct) product).warrantyMonths);
+                } else if (product instanceof FoodProduct) {
+                    type = "FOOD";
+                    extra = ((FoodProduct) product).expiryDate;
+                }
+                writer.write("PRODUCT\t" + product.productId + "\t" + product.name + "\t"
+                        + product.price + "\t" + product.quantityInStock + "\t" + type
+                        + "\t" + extra);
+                writer.newLine();
+            }
+            System.out.println("Inventory saved to inventory.txt.");
+        } catch (IOException e) {
+            System.out.println("Could not save inventory: " + e.getMessage());
+        }
     }
 }

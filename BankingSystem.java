@@ -1,3 +1,8 @@
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Scanner;
 
 public class BankingSystem {
@@ -8,6 +13,7 @@ public class BankingSystem {
     static int transactionCount = 0;
 
     public static void main(String[] args) {
+        loadBankData();
         boolean isRunning = true;
 
         while (isRunning) {
@@ -28,6 +34,7 @@ public class BankingSystem {
                 case 9 -> showBankReport();
                 case 10 -> applySavingsInterest();
                 case 11 -> {
+                    saveBankData();
                     isRunning = false;
                     System.out.println("Goodbye.");
                 }
@@ -100,6 +107,7 @@ public class BankingSystem {
             accounts[accountCount] = new CurrentAccount(number, name, openingBalance);
         }
         accountCount++;
+        saveBankData();
         System.out.println("Account opened successfully.");
     }
 
@@ -143,6 +151,7 @@ public class BankingSystem {
 
         accounts[index].deposit(amount);
         addTransaction(accounts[index], "DEPOSIT", amount, "");
+        saveBankData();
         System.out.printf("Deposit successful. New balance: $%.2f%n", accounts[index].balance);
     }
 
@@ -171,6 +180,7 @@ public class BankingSystem {
         }
         accounts[index].withdraw(amount);
         addTransaction(accounts[index], "WITHDRAWAL", amount, "");
+        saveBankData();
         System.out.printf("Withdrawal successful. New balance: $%.2f%n", accounts[index].balance);
     }
 
@@ -215,6 +225,7 @@ public class BankingSystem {
                 accounts[destinationIndex].accountNumber);
         addTransaction(accounts[destinationIndex], "TRANSFER IN", amount,
                 accounts[sourceIndex].accountNumber);
+        saveBankData();
         System.out.println("Transfer successful.");
     }
 
@@ -303,6 +314,7 @@ public class BankingSystem {
         }
         accounts[index].deposit(interest);
         addTransaction(accounts[index], "INTEREST", interest, "");
+        saveBankData();
         System.out.printf("Interest credited: $%.2f%n", interest);
         System.out.printf("New balance: $%.2f%n", accounts[index].balance);
     }
@@ -331,5 +343,58 @@ public class BankingSystem {
             }
         }
         return -1;
+    }
+
+    // Load account balances and transaction history when the program starts.
+    static void loadBankData() {
+        try (BufferedReader reader = new BufferedReader(new FileReader("banking_data.txt"))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split("\\t", -1);
+                if (parts[0].equals("ACCOUNT") && parts.length == 5
+                        && accountCount < accounts.length) {
+                    String type = parts[1];
+                    String number = parts[2];
+                    String name = parts[3];
+                    double balance = Double.parseDouble(parts[4]);
+                    if (type.equals("Savings")) {
+                        accounts[accountCount++] = new SavingsAccount(number, name, balance);
+                    } else if (type.equals("Current")) {
+                        accounts[accountCount++] = new CurrentAccount(number, name, balance);
+                    }
+                } else if (parts[0].equals("TRANSACTION") && parts.length == 5
+                        && transactionCount < transactions.length) {
+                    transactions[transactionCount++] = new BankTransaction(parts[1], parts[2],
+                            Double.parseDouble(parts[3]), parts[4]);
+                }
+            }
+            System.out.println("Bank data loaded from banking_data.txt.");
+        } catch (java.io.FileNotFoundException e) {
+            System.out.println("No saved bank data found. Starting with no accounts.");
+        } catch (IOException | NumberFormatException e) {
+            System.out.println("Could not load bank data: " + e.getMessage());
+        }
+    }
+
+    // Save the current accounts and their transaction history to a text file.
+    static void saveBankData() {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("banking_data.txt"))) {
+            for (int i = 0; i < accountCount; i++) {
+                BankAccount account = accounts[i];
+                writer.write("ACCOUNT\t" + account.accountType + "\t" + account.accountNumber
+                        + "\t" + account.accountHolderName + "\t" + account.balance);
+                writer.newLine();
+            }
+            for (int i = 0; i < transactionCount; i++) {
+                BankTransaction transaction = transactions[i];
+                writer.write("TRANSACTION\t" + transaction.accountNumber + "\t"
+                        + transaction.transactionType + "\t" + transaction.amount + "\t"
+                        + transaction.otherAccountNumber);
+                writer.newLine();
+            }
+            System.out.println("Bank data saved to banking_data.txt.");
+        } catch (IOException e) {
+            System.out.println("Could not save bank data: " + e.getMessage());
+        }
     }
 }

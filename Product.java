@@ -1,6 +1,8 @@
+
 import java.util.Scanner;
 
 public class Product {
+
     String productId;
     String name;
     double price;
@@ -17,8 +19,10 @@ public class Product {
     }
 
     void printDetails() {
-        System.out.printf("ID: %s | Name: %s | Price: $%.2f | In stock: %d",
-                productId, name, price, quantityInStock);
+        System.out.println("ID: " + productId);
+        System.out.println("Name: " + name);
+        System.out.println("Price: $" + price);
+        System.out.println("Quantity: " + quantityInStock);
     }
 
     void updateExtraDetails(Scanner input) {

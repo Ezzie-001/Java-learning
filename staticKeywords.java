@@ -1,6 +1,6 @@
 public class staticKeywords {
     public static void main(String[] args) {
-        //static - make a variable or222222 method belong to the class rather then any specific object. commonly used for utility method and shared resources
+        //static - make a variable or method belong to the class rather then any specific object. commonly used for utility method and shared resources
 
         //proceed to friend
 

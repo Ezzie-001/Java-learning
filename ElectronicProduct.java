@@ -1,28 +1,31 @@
+
 import java.util.Scanner;
 
 public class ElectronicProduct extends Product {
+
     int warrantyMonths;
 
     ElectronicProduct(String productId, String name, double price,
                       int quantityInStock, int warrantyMonths) {
-        this.productId = productId;
-        this.name = name;
-        this.price = price;
-        this.quantityInStock = quantityInStock;
+
+        super(productId, name, price, quantityInStock);
         this.warrantyMonths = warrantyMonths;
     }
 
+    @Override
     void printDetails() {
-        System.out.printf("ID: %s | Name: %s | Price: $%.2f | In stock: %d | Warranty: %d months",
-                productId, name, price, quantityInStock, warrantyMonths);
+        super.printDetails();
+        System.out.println("Warranty: " + warrantyMonths + " months");
     }
 
+    @Override
     void updateExtraDetails(Scanner input) {
-        System.out.print("New warranty period in months: ");
+        System.out.print("New warranty period: ");
         warrantyMonths = input.nextInt();
         input.nextLine();
+
         while (warrantyMonths < 0) {
-            System.out.print("Enter zero or a positive whole number: ");
+            System.out.print("Enter zero or a positive number: ");
             warrantyMonths = input.nextInt();
             input.nextLine();
         }
